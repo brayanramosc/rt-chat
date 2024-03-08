@@ -11,6 +11,23 @@
 
         const socket = io()
 
+        const form = document.getElementById('form')
+        const input = document.getElementById('input')
+        const messageListEl = document.getElementById('messages')
+
+        socket.on('chat message', (msg, serverOffset) => {
+            const message = `<li>${msg}</li>`
+            messageListEl.insertAdjacentHTML('beforeend', message)
+        })
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            if (input.value) {
+                socket.emit('chat message', input.value)
+                input.value = ''
+            }
+        })
     </script>
 
     <style>
@@ -32,6 +49,20 @@
             height: 100vh;
             padding: 36px;
             grid-template-rows: 1fr;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages > li {
+            padding: .5rem 1rem;
+        }
+
+        #messages > li:nth-child(odd) {
+            background: #000;
         }
 
         #chat {
@@ -81,6 +112,9 @@
 
 <body>
     <section id="chat">
+        <ul id="messages">
+
+        </ul>
         <form id="form">
             <input type="text" name="message" id="input" placeholder="Type a message" autocomplete="off">
             <button type="submit">
