@@ -10,7 +10,7 @@
         import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 
         const socket = io()
-        
+
     </script>
 
     <style>
@@ -34,7 +34,7 @@
             grid-template-rows: 1fr;
         }
 
-        #char {
+        #chat {
             border: 1px solid #CCC;
             border-radius: 4px;
             overflow: hidden;
@@ -42,13 +42,47 @@
             height: 100%;
             position: relative;
         }
+
+        #form {
+            bottom: 0;
+            display: flex;
+            height: 48px;
+            left: 0;
+            padding: 4px;
+            position: absolute;
+            right: 0;
+        }
+
+        #input {
+            border-radius: 9999px;
+            border: 1px solid #EEE;
+            flex: 1;
+            margin: 4px;
+            padding: 0 8px;
+        }
+
+        #input:focus {
+            outline: 0;
+        }
+
+        #form>button {
+            background: #09f;
+            color: white;
+            border: 0;
+            margin: 4px;
+            border-radius: 4px;
+        }
+
+        #form>button:hover {
+            background: #0cf;
+        }
     </style>
 </head>
 
 <body>
     <section id="chat">
         <form id="form">
-            <input type="text" name="message" id="message" placeholder="Type a message" autocomplete="off">
+            <input type="text" name="message" id="input" placeholder="Type a message" autocomplete="off">
             <button type="submit">
                 Enviar
             </button>
