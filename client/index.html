@@ -9,8 +9,23 @@
     <script type="module">
         import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 
+        const getUserName = async () => {
+            const username = localStorage.getItem('username')
+            if (username) {
+                return username
+            }
+
+            const res = await fetch('https://random-data-api.com/api/users/random_user')
+            const { username: randomUsername } = await res.json()
+
+            localStorage.setItem('username', randomUsername)
+
+            return randomUsername
+        }
+
         const socket = io({
             auth: {
+                username: await getUserName(),
                 serverOffset: 0
             }
         })
@@ -19,10 +34,16 @@
         const input = document.getElementById('input')
         const messageListEl = document.getElementById('messages')
 
-        socket.on('chat message', (msg, serverOffset) => {
-            const message = `<li>${msg}</li>`
+        socket.on('chat message', (msg, serverOffset, username) => {
+            const message = `
+                <li>
+                    <p>${msg}</p>
+                    <small>${username}</small>
+                </li>
+            `
             messageListEl.insertAdjacentHTML('beforeend', message)
             socket.auth.serverOffset = serverOffset
+            messageListEl.scrollTop = messageListEl.scrollHeight
         })
 
         form.addEventListener('submit', (e) => {
@@ -60,13 +81,17 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow: scroll;
+            height: 100%;
+            scroll-behavior: smooth;
+            padding-bottom: 48px;
         }
 
-        #messages > li {
+        #messages>li {
             padding: .5rem 1rem;
         }
 
-        #messages > li:nth-child(odd) {
+        #messages>li:nth-child(odd) {
             background: #000;
         }
 
