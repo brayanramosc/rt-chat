@@ -9,7 +9,11 @@
     <script type="module">
         import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 
-        const socket = io()
+        const socket = io({
+            auth: {
+                serverOffset: 0
+            }
+        })
 
         const form = document.getElementById('form')
         const input = document.getElementById('input')
@@ -18,6 +22,7 @@
         socket.on('chat message', (msg, serverOffset) => {
             const message = `<li>${msg}</li>`
             messageListEl.insertAdjacentHTML('beforeend', message)
+            socket.auth.serverOffset = serverOffset
         })
 
         form.addEventListener('submit', (e) => {
